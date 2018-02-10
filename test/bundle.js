@@ -18,6 +18,9 @@ export function bundle(options) {
       output: {
         filename: '[name].js'
       },
+      resolveLoader: {
+        modules: [path.resolve(workingFolder, '..', 'node_modules')]
+      },
       module: {
         rules: [
           {
