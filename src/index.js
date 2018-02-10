@@ -3,7 +3,7 @@ import rtlcss from 'rtlcss';
 
 const cssOnly = filename => path.extname(filename) === '.css';
 
-export default class RtlCssPlugin {
+class RtlCssPlugin {
   constructor(options) {
     if (typeof options === 'string') {
       options = {
@@ -42,3 +42,5 @@ export default class RtlCssPlugin {
     });
   }
 }
+
+module.exports = RtlCssPlugin;
