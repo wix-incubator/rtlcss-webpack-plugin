@@ -11,29 +11,33 @@ export function fixture(fileName) {
   return path.join(workingFolder, 'fixtures', fileName);
 }
 
-export function bundle(options) {
+export function bundle(options, modifier = x => x) {
   return new Promise((resolve, reject) => {
-    const compiler = webpack({
-      entry: fixture('index.js'),
-      output: {
-        filename: '[name].js'
-      },
-      resolveLoader: {
-        modules: [path.resolve(workingFolder, '..', 'node_modules')]
-      },
-      module: {
-        rules: [
-          {
-            test: /\.css$/,
-            use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: 'css-loader'
-            })
-          }
-        ]
-      },
-      plugins: [new ExtractTextPlugin('[name].css'), new RtlCssPlugin(options)]
-    });
+    const compiler = webpack(
+      modifier({
+        entry: {
+          bundle: fixture('index.js')
+        },
+        output: {
+          filename: '[name].js'
+        },
+        resolveLoader: {
+          modules: [path.resolve(workingFolder, '..', 'node_modules')]
+        },
+        module: {
+          rules: [
+            {
+              test: /\.css$/,
+              use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: 'css-loader'
+              })
+            }
+          ]
+        },
+        plugins: [new ExtractTextPlugin('[name].css'), new RtlCssPlugin(options)]
+      })
+    );
 
     const memoryFileSystem = new MemoryFS();
     compiler.outputFileSystem = memoryFileSystem;

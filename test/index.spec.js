@@ -1,46 +1,49 @@
 import {expect} from 'chai';
-import {bundle, filePath} from './bundle';
+import {LoaderOptionsPlugin} from 'webpack';
+import {bundle, filePath, fixture} from './bundle';
 
 describe('RtlCss Webpack Plugin', () => {
-  const bundlePath = filePath('main.js');
-  const cssBundlePath = filePath('main.css');
-  const rtlCssBundlePath = filePath('main.rtl.css');
-
-  it('should create a second bundle', async () => {
-    const fs = await bundle();
-    expect(fs.existsSync(bundlePath)).to.be.true;
-    expect(fs.existsSync(cssBundlePath)).to.be.true;
-    expect(fs.existsSync(rtlCssBundlePath)).to.be.true;
-  });
-
   it('should contain the correct content', async () => {
     const fs = await bundle();
-    const contentCss = fs.readFileSync(cssBundlePath, 'utf-8');
-    const contentRrlCss = fs.readFileSync(rtlCssBundlePath, 'utf-8');
-    expect(contentCss).to.contain('float: left');
-    expect(contentRrlCss).to.contain('float: right');
+    expect(fs.readFileSync(filePath('bundle.css'), 'utf-8')).to.equal('.a {\n  float: left;\n}\n');
+    expect(fs.readFileSync(filePath('bundle.rtl.css'), 'utf-8')).to.equal('.a {\n  float: right;\n}\n');
+  });
+
+  it('should create bundle per chunk', async () => {
+    const addChunk = x => ({...x, entry: {...x.entry, bundle2: fixture('index2.js')}});
+    const fs = await bundle(undefined, addChunk);
+    expect(fs.readFileSync(filePath('bundle.rtl.css'), 'utf-8')).to.equal('.a {\n  float: right;\n}\n');
+    expect(fs.readFileSync(filePath('bundle2.rtl.css'), 'utf-8')).to.equal('.b {\n  float: right;\n}\n');
+  });
+
+  it('should contain the correct content when minimized', async () => {
+    const minimize = x => ({...x, plugins: x.plugins.concat(new LoaderOptionsPlugin({minimize: true}))});
+    const fs = await bundle(undefined, minimize);
+    expect(fs.readFileSync(filePath('bundle.css'), 'utf-8')).to.equal('.a{float:left}');
+    expect(fs.readFileSync(filePath('bundle.rtl.css'), 'utf-8')).to.equal('.a{float:right}');
   });
 
   it('should set filename according to options as object', async () => {
     const fs = await bundle({filename: 'foo.rtl.css'});
-    const rtlCssBundlePath = filePath('foo.rtl.css');
-    expect(fs.existsSync(rtlCssBundlePath)).to.be.true;
+    expect(fs.existsSync(filePath('foo.rtl.css'))).to.be.true;
   });
 
   it('should set filename according to options as string', async () => {
     const fs = await bundle('foo.rtl.css');
-    const rtlCssBundlePath = filePath('foo.rtl.css');
-    expect(fs.existsSync(rtlCssBundlePath)).to.be.true;
+    expect(fs.existsSync(filePath('foo.rtl.css'))).to.be.true;
   });
 
-  it('should support hash', async () => {
+  it('should support [hash]', async () => {
     const fs = await bundle('foo.[hash].rtl.css');
-    const hashedFileName = fs
-      .readdirSync(process.cwd())
-      .filter(s => s.startsWith('foo'))
-      .pop();
-    const rtlCssBundlePath = filePath(hashedFileName);
-    expect(rtlCssBundlePath).not.to.equal('foo.[hash].rtl.css');
-    expect(rtlCssBundlePath).to.match(/foo\..+\.rtl\.css/);
+    const hashedFileName = fs.readdirSync(process.cwd()).find(s => s.startsWith('foo'));
+    expect(hashedFileName).not.to.equal('foo.[hash].rtl.css');
+    expect(hashedFileName).to.match(/foo\.\w+\.rtl\.css/);
+  });
+
+  it('should support [name]', async () => {
+    const addChunk = x => ({...x, entry: {...x.entry, bundle2: fixture('index2.js')}});
+    const fs = await bundle('[name]-rtl.css', addChunk);
+    expect(fs.readFileSync(filePath('bundle-rtl.css'), 'utf-8')).to.equal('.a {\n  float: right;\n}\n');
+    expect(fs.readFileSync(filePath('bundle2-rtl.css'), 'utf-8')).to.equal('.b {\n  float: right;\n}\n');
   });
 });
