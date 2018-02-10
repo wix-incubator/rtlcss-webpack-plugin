@@ -1,9 +1,9 @@
-const path = require('path');
-const rtlcss = require('rtlcss');
+import path from 'path';
+import rtlcss from 'rtlcss';
 
 const cssOnly = filename => path.extname(filename) === '.css';
 
-class RtlCssPlugin {
+export default class RtlCssPlugin {
   constructor(options) {
     if (typeof options === 'string') {
       options = {
@@ -42,5 +42,3 @@ class RtlCssPlugin {
     });
   }
 }
-
-module.exports = RtlCssPlugin;
