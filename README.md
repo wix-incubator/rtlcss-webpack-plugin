@@ -1,4 +1,4 @@
-# RTLCSS Webpack Plugin [![Build Status](https://img.shields.io/travis/wix/rtlcss-webpack-plugin/master.svg?style=flat-square)](https://travis-ci.org/wix/rtlcss-webpack-plugin) [![npm version](https://img.shields.io/npm/v/rtlcss-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rtlcss-webpack-plugin) [![npm downloads](https://img.shields.io/npm/dm/rtlcss-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rtlcss-webpack-plugin)
+# RtlCss Webpack Plugin [![Build Status](https://img.shields.io/travis/wix/rtlcss-webpack-plugin/master.svg?style=flat-square)](https://travis-ci.org/wix/rtlcss-webpack-plugin) [![npm version](https://img.shields.io/npm/v/rtlcss-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rtlcss-webpack-plugin) [![npm downloads](https://img.shields.io/npm/dm/rtlcss-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/rtlcss-webpack-plugin)
 
 Webpack plugin to use in addition to [extract-text-webpack-plugin](https://github.com/webpack/extract-text-webpack-plugin) to create a second css bundle, processed to be rtl.
 
@@ -37,7 +37,7 @@ module.exports = {
 };
 ```
 
-This will create the normal `style.css` and an additionnal `style.rtl.css`.
+This will create the normal `style.css` and an additional `style.rtl.css`.
 
 ## Options
 
