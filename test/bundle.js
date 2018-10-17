@@ -3,9 +3,12 @@ import path from 'path';
 import webpack from 'webpack';
 import MemoryFS from 'memory-fs';
 import RtlCssPlugin from '../src';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-const workingFolder = typeof wallaby !== 'undefined' ? path.join(wallaby.localProjectDir, 'test') : __dirname;
+const workingFolder =
+  typeof wallaby !== 'undefined'
+    ? path.join(wallaby.localProjectDir, 'test')
+    : __dirname;
 
 export function fixture(fileName) {
   return path.join(workingFolder, 'fixtures', fileName);
@@ -16,27 +19,34 @@ export function bundle(options, modifier = x => x) {
     const compiler = webpack(
       modifier({
         entry: {
-          bundle: fixture('index.js')
+          bundle: fixture('index.js'),
         },
         output: {
-          filename: '[name].js'
+          filename: '[name].js',
         },
         resolveLoader: {
-          modules: [path.resolve(workingFolder, '..', 'node_modules')]
+          modules: [path.resolve(workingFolder, '..', 'node_modules')],
         },
         module: {
           rules: [
             {
               test: /\.css$/,
-              use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: 'css-loader'
-              })
-            }
-          ]
+              use: [
+                {
+                  loader: MiniCssExtractPlugin.loader,
+                },
+                'css-loader',
+              ],
+            },
+          ],
         },
-        plugins: [new ExtractTextPlugin('[name].css'), new RtlCssPlugin(options)]
-      })
+        plugins: [
+          new MiniCssExtractPlugin({
+            filename: '[name].css',
+          }),
+          new RtlCssPlugin(options),
+        ],
+      }),
     );
 
     const memoryFileSystem = new MemoryFS();
@@ -54,5 +64,5 @@ export function bundle(options, modifier = x => x) {
 }
 
 export function filePath(name) {
-  return path.join(process.cwd(), name);
+  return path.join(process.cwd(), 'dist', name);
 }
