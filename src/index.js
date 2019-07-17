@@ -28,7 +28,7 @@ class RtlCssPlugin {
             chunk,
           });
 
-          if (filename.indexOf('stylable') > -1) {
+          if (filename.indexOf('stylable.bundle') > -1) {
             dstFileName = dstFileName.replace('rtl', 'stylable.bundle.rtl');
           }
 
