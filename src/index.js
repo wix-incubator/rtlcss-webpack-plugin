@@ -28,10 +28,7 @@ class RtlCssPlugin {
           // Single chunk might contain multiple css files with different names
           const { name } = path.parse(filename);
           const dstFileName = compilation.getPath(this.options.filename, {
-            chunk: {
-              ...chunk,
-              name,
-            },
+            chunk: { name },
           });
 
           compilation.assets[dstFileName] = {
