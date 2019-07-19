@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { LoaderOptionsPlugin } from 'webpack';
 import { bundle, filePath, fixture } from './bundle';
 import { join } from 'path';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 describe('RtlCss Webpack Plugin', () => {
   it('should contain the correct content', async () => {
@@ -74,21 +73,5 @@ describe('RtlCss Webpack Plugin', () => {
     expect(fs.readFileSync(filePath('bundle2-rtl.css'), 'utf-8')).to.equal(
       '.b {\n  float: right;\n}\n\n',
     );
-  });
-
-  it('should set correct filename for stylable bundles', async () => {
-    const overridePlugins = x => {
-      x.plugins[0] = new MiniCssExtractPlugin({
-        filename: '[name].stylable.bundle.css',
-      });
-      return x;
-    };
-    const fs = await bundle(undefined, overridePlugins);
-    expect(
-      fs.readFileSync(filePath('bundle.stylable.bundle.css'), 'utf-8'),
-    ).to.equal('.a {\n  float: left;\n}\n\n');
-    expect(
-      fs.readFileSync(filePath('bundle.stylable.bundle.rtl.css'), 'utf-8'),
-    ).to.equal('.a {\n  float: right;\n}\n\n');
   });
 });
