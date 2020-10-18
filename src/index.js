@@ -26,6 +26,7 @@ class RtlCssPlugin {
           const dst = rtlcss.process(src);
           const dstFileName = compilation.getPath(this.options.filename, {
             chunk,
+            cssFileName: filename
           });
 
           compilation.assets[dstFileName] = {
