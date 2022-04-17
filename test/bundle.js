@@ -14,7 +14,7 @@ export function fixture(fileName) {
   return path.join(workingFolder, 'fixtures', fileName);
 }
 
-export function bundle(options, modifier = x => x) {
+export function bundle(options, modifier = (x) => x) {
   return new Promise((resolve, reject) => {
     const compiler = webpack(
       modifier({

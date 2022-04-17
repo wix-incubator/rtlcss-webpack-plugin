@@ -15,7 +15,7 @@ describe('RtlCss Webpack Plugin', () => {
   });
 
   it('should create bundle per chunk', async () => {
-    const addChunk = x => ({
+    const addChunk = (x) => ({
       ...x,
       entry: { ...x.entry, bundle2: fixture('index2.js') },
     });
@@ -29,7 +29,7 @@ describe('RtlCss Webpack Plugin', () => {
   });
 
   it('should contain the correct content when minimized', async () => {
-    const minimize = x => ({
+    const minimize = (x) => ({
       ...x,
       plugins: x.plugins.concat(new LoaderOptionsPlugin({ minimize: true })),
     });
@@ -44,11 +44,13 @@ describe('RtlCss Webpack Plugin', () => {
 
   it('should set filename according to options as object', async () => {
     const fs = await bundle({ filename: 'foo.rtl.css' });
+    // eslint-disable-next-line no-unused-expressions
     expect(fs.existsSync(filePath('foo.rtl.css'))).to.be.true;
   });
 
   it('should set filename according to options as string', async () => {
     const fs = await bundle('foo.rtl.css');
+    // eslint-disable-next-line no-unused-expressions
     expect(fs.existsSync(filePath('foo.rtl.css'))).to.be.true;
   });
 
@@ -56,13 +58,13 @@ describe('RtlCss Webpack Plugin', () => {
     const fs = await bundle('foo.[hash].rtl.css');
     const hashedFileName = fs
       .readdirSync(join(process.cwd(), 'dist'))
-      .find(s => s.startsWith('foo'));
+      .find((s) => s.startsWith('foo'));
     expect(hashedFileName).not.to.equal('foo.[hash].rtl.css');
     expect(hashedFileName).to.match(/foo\.\w+\.rtl\.css/);
   });
 
   it('should support [name]', async () => {
-    const addChunk = x => ({
+    const addChunk = (x) => ({
       ...x,
       entry: { ...x.entry, bundle2: fixture('index2.js') },
     });

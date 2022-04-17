@@ -22,7 +22,7 @@
     "start": "yoshi start",
     "precommit": "yoshi lint",
     "pretest": "yoshi build",
-    "test": "yoshi test",
+    "test": "yoshi test --mocha",
     "posttest": "yoshi lint",
     "release": "yoshi release"
   },
@@ -34,7 +34,7 @@
     "memory-fs": "^0.4.1",
     "mini-css-extract-plugin": "^0.4.2",
     "webpack": "^4.17.1",
-    "yoshi": "^3.8.1"
+    "@wix/yoshi": "^5"
   },
   "dependencies": {
     "babel-runtime": "~6.25.0",
@@ -46,6 +46,6 @@
     ]
   },
   "eslintConfig": {
-    "extends": "yoshi"
+    "extends": "@wix/eslint-config-yoshi"
   }
 }
